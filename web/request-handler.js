@@ -14,7 +14,11 @@ exports.handleRequest = function (request, response) {
 			newData = newData.slice(4)
 			archive.addUrlToList(newData + "\n", function() {
 				response.writeHead(302)
-				response.end("Stored!")
+				var htmlFile = path.join(__dirname, "/public/loading.html")
+				fs.readFile(htmlFile, (error, data) => {
+					response.write(data);
+					response.end();
+				})
 			})
 		})
 	}
@@ -29,19 +33,21 @@ exports.handleRequest = function (request, response) {
 				})
 
 			}
-  		archive.isUrlArchived(request.url.slice(1), function(isTrue) {
-				 if (!isTrue) {
-				 	response.writeHead(404);
-					response.end("TRY AGAIN");
-				}
-				else if (isTrue) {
-					fs.readFile(path.join(archive.paths.archivedSites + request.url), function(error, data) {
-						if (error) throw error;
-						response.write(data);
-						response.end();
+			else {
+		  		archive.isUrlArchived(request.url.slice(1), function(isTrue) {
+						 if (!isTrue) {
+						 	response.writeHead(404);
+							response.end("TRY AGAIN");
+						}
+						else if (isTrue) {
+							fs.readFile(path.join(archive.paths.archivedSites + request.url), function(error, data) {
+								if (error) throw error;
+								response.write(data);
+								response.end();
 					})
 				}
 			})
+	  	}
 
 
 	}
