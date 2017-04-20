@@ -12,6 +12,7 @@ exports.handleRequest = function (request, response) {
 		})
 		request.on('end', () => {
 			newData = newData.slice(4)
+
 			archive.addUrlToList(newData + "\n", function() {
 				response.writeHead(302)
 				var htmlFile = path.join(__dirname, "/public/loading.html")
@@ -20,6 +21,9 @@ exports.handleRequest = function (request, response) {
 					response.end();
 				})
 			})
+			// archive.readListOfUrls( (data) => {
+			// 	archive.downloadUrls(data)
+			// })
 		})
 	}
   if (request.method === "GET") {

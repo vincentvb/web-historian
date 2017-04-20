@@ -67,21 +67,26 @@ exports.isUrlArchived = function(url, callback) {
 };
 
 exports.downloadUrls = function(urls) {
-  for (var i = 0; i < urls.length; i++) {
-    exports.scrapeFunc(urls[i], (html, url) => {
-      console.log(url)
-      fs.writeFile(exports.paths.archivedSites + "/" + url, html, (error) => {
-      if (error) throw error;
-      })
-    })
-  };
-};
+  for (var i = 0; i < urls.length-1; i++) { 
+    // exports.scrapeFunc(urls[i], (html, url) => {
+      // console.log(url)
+      // console.log('before: ', urls[i])
+      request("http://" + urls[i]).pipe(fs.createWriteStream(exports.paths.archivedSites + "/" + urls[i]));
+        // console.log('after: ', urls[i])
+        // , body, (error) => {
+        // if (error) throw error;
+      }  
+  }
 
-exports.scrapeFunc = function(url, callback) {
-  request("http://" + url, (error, response, body) => {
-    callback(body, url)
-  });
-}; 
+
+// exports.scrapeFunc = function(url, callback) {
+//   request("http://" + url, (error, response, body) => {
+//     console.log('this is url: ', url)
+//     console.log(body)
+//     console.log(response);
+//     callback(body, url)
+//   });
+// }; 
 
     // request("http://" + urls[i], (error, response, body) => {
     //   fs.writeFile(exports.paths.archivedSites + "/" + urls[i], body, (error) => {
